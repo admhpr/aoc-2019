@@ -11,12 +11,13 @@ async function setup(){
     const wirePathA = computePath(wires["0"])
     const wirePathB = computePath(wires["1"])
     const crossOverPoints = getCrossOverPoints(wirePathA, wirePathB)
-    console.log(findMinDistance(crossOverPoints));
+    console.log(findMinDistance(crossOverPoints, wirePathA, wirePathB));
 }
 function computePath(path){
-    const points = new Set();
+    const points = new Map();
     let x = 0;
-    let y = 0;    
+    let y = 0;
+    let steps = 1;    
     path.forEach(movement => {
         let direction = movement.substring(0,1);
         let spaces = parseInt(movement.substring(1, movement.length));   
@@ -28,8 +29,9 @@ function computePath(path){
                 case 'R': x++; break;
             }   
             if ( !points.has(`${x},${y}`) ) {
-                points.add(`${x},${y}`);
+                points.set(`${x},${y}`, steps);
             }
+            steps++
         }
     })
     return points
@@ -45,15 +47,16 @@ function getCrossOverPoints(wirePathA, wirePathB) {
     return crossOverPoints;
 }
 
-function findMinDistance(crossOverPoints) {
-    let minDistance = findDistanceToStart(crossOverPoints[0].split(","));
+function findMinDistance(crossOverPoints, wirePathA, wirePathB) {
+    let minDistanceKey = crossOverPoints[0];
+    let minTravelDistance = wirePathA.get(minDistanceKey) + wirePathB.get(minDistanceKey);
     crossOverPoints.forEach(intersection => {
-        const currentDistance = findDistanceToStart(intersection.split(","));
-        if ( currentDistance < minDistance ) {
-            minDistance = currentDistance;
+        const totalDistance = wirePathA.get(intersection) + wirePathB.get(intersection);
+        if ( totalDistance < minTravelDistance ) {
+            minTravelDistance = totalDistance;
         }
     });
-    return minDistance;
+    return minTravelDistance;
 }
 
 function findDistanceToStart([x, y]) {
