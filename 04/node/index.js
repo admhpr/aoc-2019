@@ -3,9 +3,9 @@ const path = require('path');
 const inputPath = path.join(__dirname, 'input');
 
 async function execute(){
-    const [input] = fs.readFileSync(inputPath, 'utf8').split("\n")
-    part1(input.split("-").map(v => Number(v)))
- 
+    const [input] = fs.readFileSync(inputPath, 'utf8').split("\n");
+    const range = input.split("-").map(v => Number(v));
+    part1(range)
 }
 
 function part1([start, end]){
@@ -13,13 +13,13 @@ function part1([start, end]){
     const potentialPasswords = [];
 
     while(current < end){
-        // validate
-        console.log(current)
         if(isSixDigits(current) && hasAdjacent(current) && doesNotDecrease(current)){
             potentialPasswords.push(current)
         }
         current += 1;
     }
+
+    return potentialPasswords.length
 }
 function isSixDigits(n){
     return String(n).length === 6
