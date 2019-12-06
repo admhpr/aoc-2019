@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');    
 const inputPath = path.join(__dirname, 'input');
 
-async function setup(){
+async function execute(){
     const input = fs.readFileSync(inputPath, 'utf8').split("\n")
     const wires = {"0": [], "1": []}
     input.forEach((line, index) => {
@@ -63,4 +63,4 @@ function findDistanceToStart([x, y]) {
     // @see: https://stackoverflow.com/questions/8224470/calculating-manhattan-distance
     return Math.abs(Number(x)) + Math.abs(Number(y));
 }
-setup()
+execute()
