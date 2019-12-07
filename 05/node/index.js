@@ -9,20 +9,22 @@ function part1(array) {
   array.forEach((value, position) => {
     lookup[position] = {
       value,
-      isOpcode: [1, 2, 3, 4, 99].includes(getOpcode(value)) && position > (currentOpcode + currentParamLength),
+      opcode: getOpcode(value),
+      isOpcode:
+        [1, 2, 3, 4, 99].includes(getOpcode(value)) &&
+        position > currentOpcode + currentParamLength || position === 0,
       operation: getOperation(getOpcode(value)),
-      modes: getModes(value),
+      modes: getModes(value)
     };
-    if(lookup[position].isOpcode){
-      currentParamLength = String(lookup[position].value).split("").length 
-      lookup[position].operationRange = currentParamLength
+    if (lookup[position].isOpcode) {
+      currentParamLength = String(lookup[position].value).split("").length;
+      lookup[position].operationRange = currentParamLength;
       currentOpcode = position;
     }
   });
-  console.log(lookup)
   for (const [pos, value] of Object.entries(lookup)) {
     if (value.isOpcode) {
-      // console.log(pos, value)
+      //todo
     }
   }
   return Object.values(lookup).map(({ value }) => value)[0];
@@ -40,11 +42,12 @@ function getOperation(value) {
     2: function multiply(x, y) {
       return x.value * y.value;
     },
-    3: function input(x) {
-      return x;
+    3: function input(x, position, lookup) {
+      lookup[position].value = x;
+      return lookup;
     },
     4: function output(x) {
-      return x;
+      console.log(x)
     },
     99: function end() {
       return false;
@@ -53,20 +56,16 @@ function getOperation(value) {
   return Object.keys(lookup).includes(String(value)) ? lookup[value] : null;
 }
 
-function getOpcode(n){
-  return n % 100
+function getOpcode(n) {
+  return n % 100;
 }
 
-function getModes(n){
-  let modes = [];
-  const thousands = Math.floor(n/1000) % 10;
-  modes[0] = thousands;
-  const hundreds = Math.floor(n/100) % 10;
-  modes[1] = hundreds;
-  const tens = Math.floor(n/10) % 10;
-  modes[2] = tens;
-  return modes
+function getModes(n) {
+  return [remainderFrom(n, 1000), remainderFrom(n, 100), remainderFrom(n, 10)];
+}
 
+function remainderFrom(n, divideBy) {
+  return Math.floor(n / divideBy) % 10;
 }
 
 function execute(compute = part1) {
