@@ -46,7 +46,7 @@ function placesFromPosition(pos, additional) {
 function getOperation(value) {
   const lookup = {
     1: function add(x, y) {
-      return x.value + y.value;
+      return x.value + y.>value;
     },
     2: function multiply(x, y) {
       return x.value * y.value;
