@@ -2,32 +2,30 @@ const fs = require("fs");
 const path = require("path");
 const inputPath = path.join(__dirname, "input-test");
 
-function part1(array) {
-  const lookup = {};
-  let currentParamLength = String(array[0]).split("").length;
-  let currentOpcode = 0;
-  array.forEach((value, position) => {
-    lookup[position] = {
-      value,
-      opcode: getOpcode(value),
-      isOpcode:
-        [1, 2, 3, 4, 99].includes(getOpcode(value)) &&
-        position > currentOpcode + currentParamLength || position === 0,
-      operation: getOperation(getOpcode(value)),
-      modes: getModes(value)
-    };
-    if (lookup[position].isOpcode) {
-      currentParamLength = String(lookup[position].value).split("").length;
-      lookup[position].operationRange = currentParamLength;
-      currentOpcode = position;
-    }
-  });
-  for (const [pos, value] of Object.entries(lookup)) {
-    if (value.isOpcode) {
-      //todo
-    }
-  }
-  return Object.values(lookup).map(({ value }) => value)[0];
+const ADD = 1
+const MULTIPLY = 2
+const INPUT = 3
+const OUTPUT = 4
+const HALT = 99
+
+const NUM_PARAMS = {
+  ADD: 3,
+  MULTIPLY: 3,
+  INPUT: 1,
+  OUTPUT: 1,
+  JUMP_IF_TRUE: 2,
+  JUMP_IF_FALSE: 2,
+  LESS_THAN: 3,
+  EQUALS: 3,
+  HALT: 0,
+}
+
+const POSITION_MODE = 0
+const IMMEDIATE_MODE = 1
+
+
+function part1(array, input = 1) {
+  
 }
 
 function placesFromPosition(pos, additional) {
@@ -37,17 +35,17 @@ function placesFromPosition(pos, additional) {
 function getOperation(value) {
   const lookup = {
     1: function add(x, y) {
-      return x.value + y.value;
+      return Math.abs(x) + Math.abs(y);
     },
     2: function multiply(x, y) {
-      return x.value * y.value;
+      return Math.abs(x) * Math.abs(y);
     },
     3: function input(x, position, lookup) {
       lookup[position].value = x;
       return lookup;
     },
     4: function output(x) {
-      console.log(x)
+      console.log(`Output: ${x}`)
     },
     99: function end() {
       return false;
@@ -61,10 +59,11 @@ function getOpcode(n) {
 }
 
 function getModes(n) {
-  return [remainderFrom(n, 1000), remainderFrom(n, 100), remainderFrom(n, 10)];
+  return [remainderFrom(n, 10000), remainderFrom(n, 1000), remainderFrom(n, 100)];
 }
 
 function remainderFrom(n, divideBy) {
+  console.log(n, Math.floor(n / divideBy))
   return Math.floor(n / divideBy) % 10;
 }
 
@@ -76,5 +75,4 @@ function execute(compute = part1) {
       .map(v => Number(v))
   );
 }
-
-console.log(execute(part1));
+execute(part1);
