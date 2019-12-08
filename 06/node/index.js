@@ -19,13 +19,15 @@ function execute() {
 }
 
 function calculateOrbits(system){
-    let total;
+    var total = 0;
     for(const [planet, info] of system){
-        const planetsTotal = 0;
+        const planetsTotal = info.children.length;
         info.children.forEach(child => {
-            console.log(planet, child)
+            planetsTotal = system.get(child).children.length
         })
+        total += planetsTotal
     }
+    console.log(total)
 }
 
 function createPlanet([directOrbit, satellite]) {
