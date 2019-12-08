@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const inputPath = path.join(__dirname, "../input");
+const inputPath = path.join(__dirname, "../input-test");
 
 const operation: Record<string, string> = {
   "01": "ADD",
