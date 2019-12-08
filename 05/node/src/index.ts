@@ -157,7 +157,7 @@ function getModes(n: number, numberParams: number) {
 }
 
 function execute() {
-  const data = fs
+  const dataInMemory = fs
     .readFileSync(inputPath, "utf8")
     .split(",")
     .map((v: string) => Number(v));
@@ -165,7 +165,7 @@ function execute() {
   let pointer = 0;
   
   while (true) {
-    const instruction = createInstruction(data, pointer);
+    const instruction = createInstruction(dataInMemory, pointer);
     const HALT = "99";
     if(instruction.opcode === HALT){
       return
