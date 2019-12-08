@@ -4,12 +4,16 @@ const path = require("path");
 const inputPath = path.join(__dirname, "input-test");
 
 const system = new Map();
+const tree = new Map();
 
 function execute(){
     const input = fs.readFileSync(inputPath, "utf8").split("\n");
     system.set("COM", createPlanet([null, "COM"]))
     input.forEach(orbitInfo => {
         setValues(orbitInfo)
+    })
+    system.values(planet => {
+        console.log(planet)
     })
 }
 
@@ -29,4 +33,3 @@ function setValues(orbitInfo){
 }
 
 execute()
-console.log(system)
